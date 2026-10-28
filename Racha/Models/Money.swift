@@ -7,7 +7,7 @@ enum Money {
         let sign = cents < 0 ? "-" : ""
         let value = abs(cents)
         let reais = groupThousands(value / 100)
-        let centavos = String(format: "%02d", value % 100)
+        let centavos = String(format: "%02ld", value % 100)
         return "\(sign)R$ \(reais),\(centavos)"
     }
 

@@ -4,7 +4,7 @@ import SwiftUI
 struct RachaApp: App {
     var body: some Scene {
         WindowGroup {
-            BillSplitView()
+            RootView()
         }
     }
 }

@@ -60,9 +60,9 @@ extension BillSplit {
     /// A small Integration Day used in examples and tests.
     static let integrationDaySample = BillSplit(
         purchases: [
-            Purchase(buyer: "Ana", amount: 12000, item: "Pizza"),
-            Purchase(buyer: "Bia", amount: 4500, item: "Refrigerante"),
-            Purchase(buyer: "Caio", amount: 3500, item: "Salgadinhos")
+            Purchase(buyer: "Ana", amount: 12000, item: "Pizza", category: .food),
+            Purchase(buyer: "Bia", amount: 4500, item: "Refrigerante", category: .drinks),
+            Purchase(buyer: "Caio", amount: 3500, item: "Salgadinhos", category: .snacks)
         ],
         participants: ["Ana", "Bia", "Caio", "Duda", "Edu"]
     )

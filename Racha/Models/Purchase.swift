@@ -7,4 +7,5 @@ struct Purchase: Identifiable, Equatable, Sendable {
     let buyer: String
     let amount: Int
     var item: String = ""
+    var category: PurchaseCategory = .other
 }

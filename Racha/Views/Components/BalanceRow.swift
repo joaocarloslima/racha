@@ -5,6 +5,7 @@ struct BalanceRow: View {
     let name: String
     let balance: Int
     let transfers: [Transfer]
+    var attended: Bool = true
 
     private var paying: [Transfer] { transfers.filter { $0.from == name } }
     private var receiving: [Transfer] { transfers.filter { $0.to == name } }
@@ -12,6 +13,7 @@ struct BalanceRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             ParticipantAvatar(name: name)
+                .opacity(attended ? 1 : 0.4)
             VStack(alignment: .leading, spacing: 4) {
                 Text(name)
                     .font(.body.weight(.semibold))
@@ -27,7 +29,10 @@ struct BalanceRow: View {
 
     @ViewBuilder
     private var details: some View {
-        if balance > 0 {
+        if !attended && balance == 0 {
+            Label("não foi, não paga", systemImage: "moon.zzz.fill")
+                .foregroundStyle(.secondary)
+        } else if balance > 0 {
             Label("recebe \(Money.format(cents: balance))", systemImage: "arrow.down.left.circle.fill")
                 .foregroundStyle(.green)
             Text(receiving.count == 1 ? "de 1 pessoa" : "de \(receiving.count) pessoas")

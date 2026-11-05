@@ -6,9 +6,11 @@ struct BillSplit: Equatable, Sendable {
     var purchases: [Purchase]
     var participants: [Participant]
 
-    init(purchases: [Purchase], participants: [String]) {
+    init(purchases: [Purchase], participants: [String], absentees: Set<String> = []) {
         self.purchases = purchases
-        self.participants = participants.map { Participant(name: $0) }
+        self.participants = participants.map {
+            Participant(name: $0, attended: !absentees.contains($0))
+        }
     }
 
     /// Shortcut for quick scenarios: a single purchase of `total`
@@ -25,19 +27,13 @@ struct BillSplit: Equatable, Sendable {
         purchases.reduce(0) { $0 + $1.amount }
     }
 
-    /// How much each participant owes, in the same order as `participants`.
-    /// The cents left over from the division go to the first participants,
-    /// one cent each, so the shares always add up to the total.
-    /// Returns an empty array when there is nobody to split with.
+    /// How much each attendee owes. People who did not attend pay nothing.
+    /// Returns an empty array when nobody attended.
     func shares() -> [Int] {
-        let count = participants.count
-        guard count > 0 else { return [] }
-
-        let base = total / count
-        let remainder = total % count
-        return (0..<count).map { index in
-            index < remainder ? base + 1 : base
-        }
+        let attendees = participants.filter { $0.attended }
+        guard !attendees.isEmpty else { return [] }
+        let share = total / attendees.count
+        return Array(repeating: share, count: attendees.count)
     }
 
     func amountPaid(by name: String) -> Int {
@@ -49,7 +45,13 @@ struct BillSplit: Equatable, Sendable {
     /// Positive: the person gets money back. Negative: the person still has to pay.
     /// Returns nil when the name is not part of the split.
     func balance(of name: String) -> Int? {
-        guard let index = participants.firstIndex(where: { $0.name == name }) else {
+        guard let person = participants.first(where: { $0.name == name }) else {
+            return nil
+        }
+        guard person.attended else { return amountPaid(by: name) }
+
+        let attendees = participants.filter { $0.attended }
+        guard let index = attendees.firstIndex(where: { $0.name == name }) else {
             return nil
         }
         return amountPaid(by: name) - shares()[index]

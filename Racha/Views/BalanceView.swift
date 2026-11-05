@@ -114,7 +114,14 @@ struct BalanceView: View {
                     let transfers = bill.settlements()
                     ForEach(viewModel.participants, id: \.self) { name in
                         if let balance = bill.balance(of: name) {
-                            BalanceRow(name: name, balance: balance, transfers: transfers)
+                            Toggle(isOn: attendanceBinding(for: name)) {
+                                BalanceRow(
+                                    name: name,
+                                    balance: balance,
+                                    transfers: transfers,
+                                    attended: !viewModel.absentees.contains(name)
+                                )
+                            }
                         }
                     }
                 }
@@ -142,7 +149,14 @@ struct BalanceView: View {
     // MARK: - Helpers
 
     private var peopleCount: Int {
-        viewModel.participants.count
+        viewModel.participants.count - viewModel.absentees.count
+    }
+
+    private func attendanceBinding(for name: String) -> Binding<Bool> {
+        Binding(
+            get: { !viewModel.absentees.contains(name) },
+            set: { _ in viewModel.toggleAttendance(of: name) }
+        )
     }
 
     private var sharePerPerson: Int {

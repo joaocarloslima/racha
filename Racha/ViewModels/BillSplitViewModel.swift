@@ -14,6 +14,7 @@ final class BillSplitViewModel {
     private(set) var purchases: [Purchase] = []
     private(set) var participants: [String] = []
     private(set) var state: LoadState = .loading
+    private(set) var absentees: Set<String> = []
 
     @ObservationIgnored
     private let service: any ParticipantsService
@@ -31,7 +32,15 @@ final class BillSplitViewModel {
     }
 
     var bill: BillSplit {
-        BillSplit(purchases: purchases, participants: participants)
+        BillSplit(purchases: purchases, participants: participants, absentees: absentees)
+    }
+
+    func toggleAttendance(of name: String) {
+        if absentees.contains(name) {
+            absentees.remove(name)
+        } else {
+            absentees.insert(name)
+        }
     }
 
     /// Ignores purchases without a buyer or without a positive amount.

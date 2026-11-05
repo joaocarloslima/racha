@@ -29,7 +29,7 @@ Requisitos: Xcode 16 ou mais novo, iOS 18 no simulador.
 | `Models/BillSplit.swift` | As regras: `total`, `shares()`, `amountPaid(by:)`, `balance(of:)` e `settlements()` (quem paga pra quem, com o mínimo de Pix). Tem o atalho `BillSplit(total:people:)` e o exemplo `BillSplit.integrationDaySample`. |
 | `Models/Transfer.swift` | Um Pix do acerto: `from` paga `amount` pra `to`. |
 | `Models/Money.swift` | Converte centavos em texto (`format(cents:)`) e texto em centavos (`cents(from:)`). Bom alvo extra para quem terminar cedo. |
-| `Services/ParticipantsService.swift` | O protocolo `ParticipantsService` e a `APIParticipantsService`, que finge ser a API da turma (espera 1 segundo e devolve 23 nomes). |
+| `Services/ParticipantsService.swift` | O protocolo `ParticipantsService` e a `APIParticipantsService`, que finge ser a API da turma (espera 1 segundo e devolve os 30 nomes da turma). |
 | `ViewModels/BillSplitViewModel.swift` | Compras, participantes, `total`, `canCloseBill`, `add(_:)`, `loadParticipants()` e o `state` (`.loading`, `.empty`, `.failed`, `.loaded`). |
 | `Views/RootView.swift` | As duas abas e a carga da turma ao abrir o app. |
 | `Views/BalanceView.swift` | Aba **Acerto** (consulta): card do total, cards de pessoas, valor por pessoa e compras, lista de quem paga pra quem e botão Fechar conta. |

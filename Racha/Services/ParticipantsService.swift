@@ -15,9 +15,12 @@ struct APIParticipantsService: ParticipantsService {
         return Self.classList
     }
 
+    /// The 30 people in the class. Surnames only where first names repeat.
     static let classList = [
-        "Ana", "Bia", "Caio", "Duda", "Edu", "Fê", "Gabi", "Hugo",
-        "Iris", "João", "Kaique", "Lara", "Malu", "Nina", "Otto", "Paula",
-        "Rafa", "Sofia", "Téo", "Vini", "Wesley", "Yara", "Zeca"
+        "Agatha", "Ana", "André", "Elisa", "Emily", "Felipe",
+        "Gabriel", "Guilherme Sales", "Guilherme Souza", "Igor", "Isabella", "João Souza",
+        "João Wandermuren", "Joice", "Juan", "Julio", "Leonardo", "Lucas",
+        "Maria", "Mariana", "Mirella", "Paulo", "Pedro Canute", "Pedro Silveira",
+        "Pedro Teruel", "Rebeca", "Sarah", "Tais", "Vinicius", "Vitor"
     ]
 }

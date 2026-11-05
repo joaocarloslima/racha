@@ -54,6 +54,49 @@ struct BillSplit: Equatable, Sendable {
         }
         return amountPaid(by: name) - shares()[index]
     }
+
+    /// Who pays whom so everyone ends up even.
+    /// The people who owe the most pay the people who are owed the most first,
+    /// which keeps the number of transfers small.
+    func settlements() -> [Transfer] {
+        var creditors: [(name: String, amount: Int)] = []
+        var debtors: [(name: String, amount: Int)] = []
+
+        for participant in participants {
+            guard let balance = balance(of: participant.name) else { continue }
+            if balance > 0 {
+                creditors.append((participant.name, balance))
+            } else if balance < 0 {
+                debtors.append((participant.name, -balance))
+            }
+        }
+
+        let largestFirst: ((name: String, amount: Int), (name: String, amount: Int)) -> Bool = {
+            $0.amount != $1.amount ? $0.amount > $1.amount : $0.name < $1.name
+        }
+        creditors.sort(by: largestFirst)
+        debtors.sort(by: largestFirst)
+
+        var transfers: [Transfer] = []
+        var debtorIndex = 0
+        var creditorIndex = 0
+
+        while debtorIndex < debtors.count && creditorIndex < creditors.count {
+            let value = min(debtors[debtorIndex].amount, creditors[creditorIndex].amount)
+            transfers.append(Transfer(
+                from: debtors[debtorIndex].name,
+                to: creditors[creditorIndex].name,
+                amount: value
+            ))
+            debtors[debtorIndex].amount -= value
+            creditors[creditorIndex].amount -= value
+
+            if debtors[debtorIndex].amount == 0 { debtorIndex += 1 }
+            if creditors[creditorIndex].amount == 0 { creditorIndex += 1 }
+        }
+
+        return transfers
+    }
 }
 
 extension BillSplit {

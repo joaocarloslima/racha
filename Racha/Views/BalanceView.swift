@@ -1,15 +1,15 @@
 import SwiftUI
 
-/// Read-only screen: the bill summary and who owes what.
+/// Read-only screen: the bill summary and who pays whom.
 struct BalanceView: View {
     let viewModel: BillSplitViewModel
-    @State private var isShowingSummary = false
+    @State private var isShowingSettlement = false
 
     var body: some View {
         NavigationStack {
             List {
                 Section {
-                    summaryCard
+                    summary
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)
                 }
@@ -17,60 +17,56 @@ struct BalanceView: View {
             }
             .navigationTitle("Racha")
             .safeAreaInset(edge: .bottom) { closeBillButton }
-            .alert("Conta fechada", isPresented: $isShowingSummary) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(summaryText)
+            .sheet(isPresented: $isShowingSettlement) {
+                SettlementView(bill: viewModel.bill)
             }
         }
     }
 
     // MARK: - Summary
 
-    private var summaryCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Total da festa")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.85))
-                Text(Money.format(cents: viewModel.total))
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-            }
-            HStack(spacing: 24) {
-                summaryItem(
+    private var summary: some View {
+        VStack(spacing: 12) {
+            totalCard
+            HStack(spacing: 12) {
+                StatCard(
                     title: "Pessoas",
-                    value: "\(viewModel.participants.count)",
-                    systemImage: "person.2.fill"
+                    value: "\(peopleCount)",
+                    systemImage: "person.2.fill",
+                    color: .blue
                 )
-                summaryItem(
-                    title: "Por pessoa",
+                StatCard(
+                    title: "Cada um",
                     value: Money.format(cents: sharePerPerson),
-                    systemImage: "divide.circle.fill"
+                    systemImage: "divide",
+                    color: .purple
                 )
-                summaryItem(
+                StatCard(
                     title: "Compras",
                     value: "\(viewModel.purchases.count)",
-                    systemImage: "cart.fill"
+                    systemImage: "cart.fill",
+                    color: .orange
                 )
             }
+        }
+    }
+
+    private var totalCard: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Label("Total da festa", systemImage: "party.popper.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.9))
+            Text(Money.format(cents: viewModel.total))
+                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(20)
         .background(Color.accentColor.gradient, in: .rect(cornerRadius: 20))
-    }
-
-    private func summaryItem(title: String, value: String, systemImage: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Label(title, systemImage: systemImage)
-                .font(.caption)
-                .foregroundStyle(.white.opacity(0.85))
-            Text(value)
-                .font(.headline)
-                .monospacedDigit()
-                .foregroundStyle(.white)
-        }
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: - Participants
@@ -106,7 +102,7 @@ struct BalanceView: View {
                 )
             }
         case .loaded:
-            Section("Quem deve pra quem") {
+            Section("Quem paga pra quem") {
                 if viewModel.purchases.isEmpty {
                     ContentUnavailableView(
                         "Nenhuma compra ainda",
@@ -114,9 +110,11 @@ struct BalanceView: View {
                         description: Text("Cadastre o que foi comprado na aba Compras.")
                     )
                 } else {
+                    let bill = viewModel.bill
+                    let transfers = bill.settlements()
                     ForEach(viewModel.participants, id: \.self) { name in
-                        if let balance = viewModel.bill.balance(of: name) {
-                            balanceRow(name: name, balance: balance)
+                        if let balance = bill.balance(of: name) {
+                            BalanceRow(name: name, balance: balance, transfers: transfers)
                         }
                     }
                 }
@@ -124,25 +122,11 @@ struct BalanceView: View {
         }
     }
 
-    private func balanceRow(name: String, balance: Int) -> some View {
-        let style = BalanceStyle(balance: balance)
-        return HStack(spacing: 12) {
-            ParticipantAvatar(name: name)
-            Text(name)
-            Spacer()
-            Label(style.text, systemImage: style.systemImage)
-                .font(.subheadline.weight(.semibold))
-                .monospacedDigit()
-                .foregroundStyle(style.color)
-        }
-        .accessibilityElement(children: .combine)
-    }
-
     // MARK: - Close bill
 
     private var closeBillButton: some View {
         Button {
-            isShowingSummary = true
+            isShowingSettlement = true
         } label: {
             Label("Fechar conta", systemImage: "checkmark.seal.fill")
                 .frame(maxWidth: .infinity)
@@ -157,12 +141,12 @@ struct BalanceView: View {
 
     // MARK: - Helpers
 
-    private var sharePerPerson: Int {
-        viewModel.bill.shares().first ?? 0
+    private var peopleCount: Int {
+        viewModel.participants.count
     }
 
-    private var summaryText: String {
-        "Total de \(Money.format(cents: viewModel.total)) para \(viewModel.participants.count) pessoas."
+    private var sharePerPerson: Int {
+        viewModel.bill.shares().first ?? 0
     }
 }
 

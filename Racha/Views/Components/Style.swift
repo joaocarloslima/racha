@@ -60,25 +60,33 @@ struct ParticipantAvatar: View {
     }
 }
 
-/// How a balance is shown: who receives, who pays, who is even.
-struct BalanceStyle {
-    let text: String
+/// Small card with one number of the summary.
+struct StatCard: View {
+    let title: String
+    let value: String
     let systemImage: String
     let color: Color
 
-    init(balance: Int) {
-        if balance > 0 {
-            text = "recebe \(Money.format(cents: balance))"
-            systemImage = "arrow.down.circle.fill"
-            color = .green
-        } else if balance < 0 {
-            text = "paga \(Money.format(cents: -balance))"
-            systemImage = "arrow.up.circle.fill"
-            color = .red
-        } else {
-            text = "tá quite"
-            systemImage = "checkmark.circle.fill"
-            color = .secondary
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: systemImage)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(color.gradient, in: .rect(cornerRadius: 7))
+                .accessibilityHidden(true)
+            Text(value)
+                .font(.headline)
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color(.secondarySystemGroupedBackground), in: .rect(cornerRadius: 14))
+        .accessibilityElement(children: .combine)
     }
 }

@@ -29,6 +29,7 @@ struct PurchasesView: View {
                         isAddingPurchase = true
                     }
                     .disabled(viewModel.participants.isEmpty)
+                    .accessibilityIdentifier("addPurchaseButton")
                 }
             }
             .sheet(isPresented: $isAddingPurchase) {

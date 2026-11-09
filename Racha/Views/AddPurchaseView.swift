@@ -30,12 +30,14 @@ struct AddPurchaseView: View {
                             Text(name).tag(name)
                         }
                     }
+                    .accessibilityIdentifier("buyerPicker")
                 }
 
                 Section("O que foi comprado") {
                     categoryGrid
                         .listRowInsets(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
                     TextField("Descrição (ex.: 3 pizzas)", text: $item)
+                        .accessibilityIdentifier("itemField")
                 }
 
                 Section {
@@ -46,6 +48,7 @@ struct AddPurchaseView: View {
                             .keyboardType(.decimalPad)
                             .font(.title2.weight(.semibold))
                             .monospacedDigit()
+                            .accessibilityIdentifier("amountField")
                     }
                 } header: {
                     Text("Valor")
@@ -65,6 +68,7 @@ struct AddPurchaseView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Salvar", action: save)
                         .disabled(!canSave)
+                        .accessibilityIdentifier("savePurchaseButton")
                 }
             }
         }

@@ -1,6 +1,6 @@
 # Racha
 
-App de racha do Integration Day, usado no workshop de testes em Swift da Apple Developer Academy.
+App de racha do Integration Day da Apple Developer Academy.
 
 Requisitos: Xcode 16 ou mais novo, iOS 18 no simulador.
 
@@ -14,8 +14,8 @@ Requisitos: Xcode 16 ou mais novo, iOS 18 no simulador.
 
 | Branch | Para quê |
 |---|---|
-| `main` | O app funcionando. É aqui que os alunos escrevem os testes. |
-| `feature/skip-absentees` | A feature “quem não foi à festa não paga”, escrita “pela IA”. Tem o bug do centavo: a divisão inteira descarta o resto. Usada no Engage e no slide dos testes parametrizados. |
+| `main` | A versão atual do app. |
+| `feature/skip-absentees` | Feature nova: quem não foi à festa não paga. |
 
 ## O que tem em cada arquivo
 
@@ -28,7 +28,7 @@ Requisitos: Xcode 16 ou mais novo, iOS 18 no simulador.
 | `Models/Participant.swift` | Uma pessoa do racha. |
 | `Models/BillSplit.swift` | As regras: `total`, `shares()`, `amountPaid(by:)`, `balance(of:)` e `settlements()` (quem paga pra quem, com o mínimo de Pix). Tem o atalho `BillSplit(total:people:)` e o exemplo `BillSplit.integrationDaySample`. |
 | `Models/Transfer.swift` | Um Pix do acerto: `from` paga `amount` pra `to`. |
-| `Models/Money.swift` | Converte centavos em texto (`format(cents:)`) e texto em centavos (`cents(from:)`). Bom alvo extra para quem terminar cedo. |
+| `Models/Money.swift` | Converte centavos em texto (`format(cents:)`) e texto em centavos (`cents(from:)`). |
 | `Services/ParticipantsService.swift` | O protocolo `ParticipantsService` e a `APIParticipantsService`, que finge ser a API da turma (espera 1 segundo e devolve os 30 nomes da turma). |
 | `ViewModels/BillSplitViewModel.swift` | Compras, participantes, `total`, `canCloseBill`, `add(_:)`, `loadParticipants()` e o `state` (`.loading`, `.empty`, `.failed`, `.loaded`). |
 | `Views/RootView.swift` | As duas abas e a carga da turma ao abrir o app. |
@@ -45,8 +45,8 @@ Os textos da interface são em português.
 
 | Arquivo | O que tem |
 |---|---|
-| `BillSplitTests.swift` | Vazio. Bloco 1. |
-| `BillSplitViewModelTests.swift` | Suíte vazia com `@MainActor`. Blocos 2 e 3. |
-| `BillSplitViewModelAITests.swift` | Os 8 testes “escritos pela IA” do desafio do bloco 2: 3 bons e 5 ruins. Todos passam. |
+| `BillSplitTests.swift` | Vazio, para os testes das regras do racha. |
+| `BillSplitViewModelTests.swift` | Suíte vazia com `@MainActor`, para os testes do ViewModel. |
+| `BillSplitViewModelAITests.swift` | Testes do ViewModel gerados por IA. |
 
-**UI Tests (`RachaUITests/`)**: o exemplo `testCloseBillStartsDisabled`, usado no slide dos próximos passos.
+**UI Tests (`RachaUITests/`)**: testes que abrem o app no simulador e usam a tela.

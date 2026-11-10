@@ -32,18 +32,7 @@
       <Testables>
          <TestableReference
             skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1A0000000000000000000031"
-               BuildableName = "RachaTests.xctest"
-               BlueprintName = "RachaTests"
-               ReferencedContainer = "container:Racha.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1A0000000000000000000032"

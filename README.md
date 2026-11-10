@@ -41,12 +41,4 @@ Requisitos: Xcode 16 ou mais novo, iOS 18 no simulador.
 
 Os textos da interface são em português.
 
-**Testes (`RachaTests/`)**
-
-| Arquivo | O que tem |
-|---|---|
-| `BillSplitTests.swift` | Vazio, para os testes das regras do racha. |
-| `BillSplitViewModelTests.swift` | Suíte vazia com `@MainActor`, para os testes do ViewModel. |
-| `BillSplitViewModelAITests.swift` | Testes do ViewModel gerados por IA. |
-
 **UI Tests (`RachaUITests/`)**: testes que abrem o app no simulador e usam a tela.

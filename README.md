@@ -50,14 +50,3 @@ Os textos da interface são em português.
 | `BillSplitViewModelAITests.swift` | Os 8 testes “escritos pela IA” do desafio do bloco 2: 3 bons e 5 ruins. Todos passam. |
 
 **UI Tests (`RachaUITests/`)**: o exemplo `testCloseBillStartsDisabled`, usado no slide dos próximos passos.
-
-## O que fica de fora de propósito
-
-- O `StubParticipantsService` não existe no starter: os alunos criam no bloco 3.
-- Nenhum teste de `BillSplit` vem pronto.
-
-## Regras do código
-
-- Todo identificador em inglês (tipos, funções, variáveis, testes).
-- Textos que aparecem na tela em português.
-- Dinheiro sempre em centavos (`Int`).
